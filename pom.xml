@@ -20,6 +20,7 @@
         <mysql.version>8.0.26</mysql.version>
         <oracle.version>21.1.0.0</oracle.version>
         <lombok.version>1.18.20</lombok.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <!-- 依赖管理 -->
@@ -56,6 +57,12 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
 
