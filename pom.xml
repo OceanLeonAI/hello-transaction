@@ -4,9 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.leon</groupId>
     <artifactId>hello-transaction</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>hello-transaction</name>
     <description>事务相关学习案例 for Spring Boot</description>
+
+    <!-- 模块聚合 -->
+    <modules>
+        <module>hello-jdbc</module>
+    </modules>
 
     <!-- 版本控制 -->
     <properties>
