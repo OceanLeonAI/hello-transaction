@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
  * @AUTHOR: OceanLeonAI
  * @CREATED_DATE: 2021/8/19 23:30
  * @Version 1.0
- * @DESCRIPTION: JDBC 基本操作
+ * @DESCRIPTION: JDBC PreparedStatement 基本操作
  * <p>
  * 1.注册驱动
  * 2.获取连接
@@ -35,13 +35,13 @@ import java.util.ResourceBundle;
  * PRIMARY KEY (`id`)
  * ) ENGINE=InnoDB AUTO_INCREMENT=1419612758509715459 DEFAULT CHARSET=utf8;
  **/
-public class HelloJDBCTest {
+public class HelloJDBCPreparedStatementTest {
 
     /**
      * JDBC 新增
      */
     @Test
-    public void insert() {
+    public void helloJDBCInsert() {
 
         Connection connection = null;
         Statement statement = null;
@@ -100,7 +100,7 @@ public class HelloJDBCTest {
      * JDBC 删除
      */
     @Test
-    public void delete() {
+    public void helloJDBCDelete() {
 
         Connection connection = null;
         Statement statement = null;
@@ -159,7 +159,7 @@ public class HelloJDBCTest {
      * JDBC 修改
      */
     @Test
-    public void update() {
+    public void helloJDBCUpdate() {
 
         Connection connection = null;
         Statement statement = null;
@@ -197,6 +197,96 @@ public class HelloJDBCTest {
             e.printStackTrace();
         } finally {
             // 关闭资源 从小到大
+            if (null != statement) {
+                try {
+                    statement.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+            if (null != connection) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * JDBC 查询
+     */
+    @Test
+    public void helloJDBCQuery() {
+
+        // 加载配置文件
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("jdbc");
+        String url = resourceBundle.getString("url");
+        String user = resourceBundle.getString("user");
+        String password = resourceBundle.getString("password");
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            // 1.注册驱动
+            // Class.forName("com.mysql.cj.jdbc.Driver");
+            Driver driver = new Driver();
+            DriverManager.registerDriver(driver);
+
+            // 2.获取连接
+
+            connection = DriverManager.getConnection(url, user, password);
+            System.out.println("数据库连接对象: " + connection);
+
+            // 3.获取数据库操作对象
+            statement = connection.createStatement();
+
+            // 4.执行 sql
+            // String sql = "select * from user;";
+            String sql = "select id,name, name as username,age,email from user;";
+
+            // 专门执行 DML 语句（insert update delete）,返回受影响行数
+            resultSet = statement.executeQuery(sql);
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData(); // 获取键名
+            int columnCount = resultSetMetaData.getColumnCount(); // 获取行的数量
+
+            while (resultSet.next()) {
+                for (int i = 1; i < columnCount; i++) { // 注意下标从 1 开始
+                    // String columnLabel
+
+                    // 通过列下标获取
+                    // String getString(int columnIndex) throws SQLException;
+                    // System.out.println(resultSet.getString(1));
+
+                    // 通过返回列名称查询,有 field as 'xxx' 则查询 xxx
+                    // String getString(String columnLabel) throws SQLException;
+                    System.out.println("username ---> " + resultSet.getString("username"));
+
+
+                    System.out.print(resultSetMetaData.getColumnName(i) + " --- " + resultSet.getObject(i) + "\t");
+                }
+                System.out.println(); // 换行
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 关闭资源 从小到大
+
+            if (null != resultSet) {
+                try {
+                    resultSet.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
             if (null != statement) {
                 try {
                     statement.close();
