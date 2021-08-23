@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  * `status` int(11) DEFAULT '1',
  * `deleted` int(11) DEFAULT '0',
  * PRIMARY KEY (`id`)
- * ) ENGINE=InnoDB AUTO_INCREMENT=1419612758509715459 DEFAULT CHARSET=utf8;
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  **/
 public class HelloJDBCPreparedStatementTest {
 
@@ -73,7 +73,6 @@ public class HelloJDBCPreparedStatementTest {
 
             System.out.println(count >= 1 ? "新增成功" : "新增失败");
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -85,7 +84,6 @@ public class HelloJDBCPreparedStatementTest {
                     throwables.printStackTrace();
                 }
             }
-
             if (null != connection) {
                 try {
                     connection.close();

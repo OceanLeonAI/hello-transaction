@@ -1,12 +1,5 @@
 package com.leon;
 
-import com.mysql.cj.jdbc.Driver;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * @PROJECT_NAME: hello-transaction
  * @CLASS_NAME: HelloJDBC
@@ -26,8 +19,6 @@ public class HelloJDBC {
 
     public static void main(String[] args) {
         System.out.println("见测试用例");
-
     }
-
 
 }

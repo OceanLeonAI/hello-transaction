@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  * `status` int(11) DEFAULT '1',
  * `deleted` int(11) DEFAULT '0',
  * PRIMARY KEY (`id`)
- * ) ENGINE=InnoDB AUTO_INCREMENT=1419612758509715459 DEFAULT CHARSET=utf8;
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  **/
 public class HelloJDBCTest {
 
@@ -63,9 +63,12 @@ public class HelloJDBCTest {
             statement = connection.createStatement();
 
             // 4.执行 sql
-            String sql = "INSERT INTO USER ( id, NAME, age )\n" +
+//            String sql = "INSERT INTO USER ( id, NAME, age )\n" +
+//                    "VALUES\n" +
+//                    "\t( 4, 'leon', 0 ),( 5, 'leon', 0 ),( 6, 'leon', 0 );";
+            String sql = "INSERT INTO USER (NAME, age )\n" +
                     "VALUES\n" +
-                    "\t( 4, 'leon', 0 ),( 5, 'leon', 0 ),( 6, 'leon', 0 );";
+                    "\t('leon', 0 ),('leon', 0 ),('leon', 0 );";
 
 
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
@@ -184,7 +187,7 @@ public class HelloJDBCTest {
             String sql = "UPDATE USER \n" +
                     "\tSET NAME = 'leon-update' \n" +
                     "WHERE\n" +
-                    "\tid = 1;";
+                    "\tid = 7;";
 
 
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
