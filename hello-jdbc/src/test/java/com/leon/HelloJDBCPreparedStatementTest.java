@@ -41,10 +41,12 @@ public class HelloJDBCPreparedStatementTest {
      * JDBC 新增
      */
     @Test
-    public void helloJDBCInsert() {
+    public void insert() {
 
+        // 数据库连接对象
         Connection connection = null;
-        Statement statement = null;
+        // 预编译对象
+        PreparedStatement preparedStatement = null;
 
         try {
             // 1.注册驱动
@@ -59,27 +61,38 @@ public class HelloJDBCPreparedStatementTest {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("数据库连接对象: " + connection);
 
-            // 3.获取数据库操作对象
-            statement = connection.createStatement();
 
-            // 4.执行 sql
-            String sql = "INSERT INTO USER ( id, NAME, age )\n" +
-                    "VALUES\n" +
-                    "\t( 4, 'leon', 0 ),( 5, 'leon', 0 ),( 6, 'leon', 0 );";
+            // 3.拼接 sql
+            StringBuffer sb = new StringBuffer();
+            sb.append("INSERT INTO USER (NAME, age )")
+                    .append(" ")
+                    .append("VALUES")
+                    .append(" ");
+            int userLength = 100;
+            for (int i = 0; i < userLength; i++) {
+                sb.append("('user" + i + "', " + i + " )");
+                if (i + 1 != userLength) {
+                    sb.append(",");
+                }
+            }
+            String sql = sb.toString();
+            System.out.println("sql ---> " + sql);
 
+            // 4预编译,获取数据库操作对象
+            preparedStatement = connection.prepareStatement(sql);
 
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
-            int count = statement.executeUpdate(sql);
+            int count = preparedStatement.executeUpdate();
 
-            System.out.println(count >= 1 ? "新增成功" : "新增失败");
+            System.out.println(count >= 1 ? "新增成功 " + count + " 条" : "新增失败");
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             // 关闭资源 从小到大
-            if (null != statement) {
+            if (null != preparedStatement) {
                 try {
-                    statement.close();
+                    preparedStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -98,10 +111,10 @@ public class HelloJDBCPreparedStatementTest {
      * JDBC 删除
      */
     @Test
-    public void helloJDBCDelete() {
+    public void delete() {
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
 
         try {
             // 1.注册驱动
@@ -114,35 +127,32 @@ public class HelloJDBCPreparedStatementTest {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("数据库连接对象: " + connection);
 
-            // 3.获取数据库操作对象
-            statement = connection.createStatement();
+            // 3.构造 sql
+            String sql = "DELETE FROM USER WHERE id < ?;";
 
-            // 4.执行 sql
-            String sql = "DELETE \n" +
-                    "FROM\n" +
-                    "USER \n" +
-                    "WHERE\n" +
-                    "\tid = 1;";
+            // 4.预编译sql,获取数据库操作对象
+            preparedStatement = connection.prepareStatement(sql);
 
+            // 5.设置参数
+            // 删除前 10 条数据
+            preparedStatement.setInt(1, 10);
 
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
-            int count = statement.executeUpdate(sql);
+            int count = preparedStatement.executeUpdate();
 
-            System.out.println(count == 1 ? "删除成功" : "删除失败");
-
+            System.out.println(count > 0 ? "删除成功 " + count + " " : "删除失败");
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // 关闭资源 从小到大
-            if (null != statement) {
+            if (null != preparedStatement) {
                 try {
-                    statement.close();
+                    preparedStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }
-
             if (null != connection) {
                 try {
                     connection.close();
@@ -157,10 +167,10 @@ public class HelloJDBCPreparedStatementTest {
      * JDBC 修改
      */
     @Test
-    public void helloJDBCUpdate() {
+    public void update() {
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
 
         try {
             // 1.注册驱动
@@ -175,34 +185,35 @@ public class HelloJDBCPreparedStatementTest {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("数据库连接对象: " + connection);
 
-            // 3.获取数据库操作对象
-            statement = connection.createStatement();
+            // 3.构造 sql
+            String sql = "UPDATE USER SET NAME = 'leon-update' WHERE id < ?;";
 
-            // 4.执行 sql
-            String sql = "UPDATE USER \n" +
-                    "\tSET NAME = 'leon-update' \n" +
-                    "WHERE\n" +
-                    "\tid = 1;";
+            // 4.预编译，获取数据库操作对象
+            preparedStatement = connection.prepareStatement(sql);
 
+            // 5.设置参数
+            Object[] args = {20}; // 修改前 20 条数据
+            for (int i = 0; i < args.length; i++) {
+                preparedStatement.setObject(i + 1, args[i]);
+            }
 
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
-            int count = statement.executeUpdate(sql);
+            int count = preparedStatement.executeUpdate();
 
-            System.out.println(count == 1 ? "修改成功" : "修改失败");
+            System.out.println(count > 0 ? "修改成功 " + count + " 条数据" : "修改失败");
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             // 关闭资源 从小到大
-            if (null != statement) {
+            if (null != preparedStatement) {
                 try {
-                    statement.close();
+                    preparedStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }
-
             if (null != connection) {
                 try {
                     connection.close();
@@ -219,7 +230,7 @@ public class HelloJDBCPreparedStatementTest {
      * JDBC 查询
      */
     @Test
-    public void helloJDBCQuery() {
+    public void query() {
 
         // 加载配置文件
         ResourceBundle resourceBundle = ResourceBundle.getBundle("jdbc");
@@ -228,7 +239,7 @@ public class HelloJDBCPreparedStatementTest {
         String password = resourceBundle.getString("password");
 
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
@@ -242,15 +253,15 @@ public class HelloJDBCPreparedStatementTest {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("数据库连接对象: " + connection);
 
-            // 3.获取数据库操作对象
-            statement = connection.createStatement();
-
-            // 4.执行 sql
+            // 3.准备 sql
             // String sql = "select * from user;";
             String sql = "select id,name, name as username,age,email from user;";
 
+            // 4.预编译SQL，获取数据库操作对象
+            preparedStatement = connection.prepareStatement(sql);
+
             // 专门执行 DML 语句（insert update delete）,返回受影响行数
-            resultSet = statement.executeQuery(sql);
+            resultSet = preparedStatement.executeQuery();
             ResultSetMetaData resultSetMetaData = resultSet.getMetaData(); // 获取键名
             int columnCount = resultSetMetaData.getColumnCount(); // 获取行的数量
 
@@ -264,19 +275,16 @@ public class HelloJDBCPreparedStatementTest {
 
                     // 通过返回列名称查询,有 field as 'xxx' 则查询 xxx
                     // String getString(String columnLabel) throws SQLException;
-                    System.out.println("username ---> " + resultSet.getString("username"));
-
+                    // System.out.println("username ---> " + resultSet.getString("username"));
 
                     System.out.print(resultSetMetaData.getColumnName(i) + " --- " + resultSet.getObject(i) + "\t");
                 }
                 System.out.println(); // 换行
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             // 关闭资源 从小到大
-
             if (null != resultSet) {
                 try {
                     resultSet.close();
@@ -284,15 +292,13 @@ public class HelloJDBCPreparedStatementTest {
                     throwables.printStackTrace();
                 }
             }
-
-            if (null != statement) {
+            if (null != preparedStatement) {
                 try {
-                    statement.close();
+                    preparedStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
             }
-
             if (null != connection) {
                 try {
                     connection.close();
