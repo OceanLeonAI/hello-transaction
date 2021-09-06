@@ -77,5 +77,61 @@ public class JDBCUtil {
         }
     }
 
+    /**
+     * 错误示例
+     */
+    public static void errorConnectionDemo() {
+        long begin = 0;
+        try {
+            String url = "jdbc:mysql://192.168.11.36:3306/single";
+            String user = "root";
+            String password = "a123456";
+            begin = System.currentTimeMillis();
+            DriverManager.setLoginTimeout(1);
+            Connection connection = DriverManager.getConnection(url, user, password);
+            System.out.println("超时111--- " + (System.currentTimeMillis() - begin));
+            //connection.setNetworkTimeout();
+            System.out.println("获取到connection ---> " + connection);
+        } catch (Exception e) {
+            System.out.println("超时--- " + (System.currentTimeMillis() - begin));
+            // e.printStackTrace();
+            // System.out.println(e);
+            System.out.println(e.getMessage());
+        }
+    }
 
+    /**
+     * 错误示例
+     */
+    public static void successConnectionDemo() {
+        long begin = 0;
+        try {
+            String url = "jdbc:mysql://127.0.0.1:3306/leon";
+            String user = "root";
+            String password = "root";
+            begin = System.currentTimeMillis();
+            DriverManager.setLoginTimeout(1);
+            Connection connection = DriverManager.getConnection(url, user, password);
+            System.out.println("超时111--- " + (System.currentTimeMillis() - begin));
+            //connection.setNetworkTimeout();
+            System.out.println("获取到connection ---> " + connection);
+        } catch (Exception e) {
+            System.out.println("超时--- " + (System.currentTimeMillis() - begin));
+            // e.printStackTrace();
+            // System.out.println(e);
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 测试连接
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        // errorConnectionDemo();
+
+        successConnectionDemo();
+    }
 }
