@@ -116,6 +116,7 @@ public class JDBCUtil {
             //connection.setNetworkTimeout();
             System.out.println("获取到connection ---> " + connection);
         } catch (Exception e) {
+
             System.out.println("超时--- " + (System.currentTimeMillis() - begin));
             // e.printStackTrace();
             // System.out.println(e);
